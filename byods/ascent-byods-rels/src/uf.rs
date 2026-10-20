@@ -149,7 +149,7 @@ pub mod elems {
          }
          // Path halving
          elem.parent.set(grandparent_id);
-         self.find(grandparent_id)
+         unsafe { self.find(grandparent_id) }
       }
 
       pub(super) fn get(&self, id: Id) -> Option<&Elem<T>> { self.0.get(id.0.to_usize()) }
@@ -165,7 +165,7 @@ pub mod elems {
 
       pub(super) unsafe fn _get_unchecked_mut(&mut self, id: Id) -> &mut Elem<T> {
          debug_assert!(self.has(id));
-         self.0.get_unchecked_mut(id.0.to_usize())
+         unsafe { self.0.get_unchecked_mut(id.0.to_usize()) }
       }
 
       /// Iterate over all of the elements
@@ -187,7 +187,7 @@ pub mod elems {
       ///
       /// SAFETY: The ID must exist.
       pub(super) unsafe fn iter_class_unchecked(&self, start: Id) -> impl Iterator<Item = (Id, &Elem<T>)> {
-         Class::new_unchecked(self, start)
+         unsafe { Class::new_unchecked(self, start) }
       }
 
       /// Iterate over the equivalence classes
@@ -312,7 +312,7 @@ pub mod elems {
       }
 
       unsafe fn new_unchecked(elems: &'a Elems<T>, start: Id) -> Self {
-         Class { elems, start, current: elems.get_unchecked(start) }
+         Class { elems, start, current: unsafe { elems.get_unchecked(start) } }
       }
    }
 
@@ -400,7 +400,7 @@ impl<T: Clone + Hash + Eq> UnionFind<T> {
    /// SAFETY: The ID must already exist in the union-find.
    pub unsafe fn find(&self, id: Id) -> Id {
       debug_assert!(self.elems.has(id));
-      self.elems.find(id).id
+      unsafe { self.elems.find(id) }.id
    }
 
    pub fn find_item(&self, item: &T) -> Option<Id> { self.find_item_internal(item).map(|r| r.id) }
@@ -450,10 +450,10 @@ impl<T: Clone + Hash + Eq> UnionFind<T> {
       debug_assert!(self.elems.has(y));
 
       if x == y {
-         return self.elems.find(x);
+         return unsafe { self.elems.find(x) };
       }
-      let x_result = self.elems.find(x);
-      let y_result = self.elems.find(y);
+      let x_result = unsafe { self.elems.find(x) };
+      let y_result = unsafe { self.elems.find(y) };
       if x_result.id == y_result.id {
          return x_result; // already in the same set
       }
@@ -472,7 +472,7 @@ impl<T: Clone + Hash + Eq> UnionFind<T> {
    pub unsafe fn union(&self, x: Id, y: Id) -> Id {
       debug_assert!(self.elems.has(x));
       debug_assert!(self.elems.has(y));
-      self.union_internal(x, y).id
+      unsafe { self.union_internal(x, y) }.id
    }
 
    pub fn union_add(&mut self, x: T, y: T) -> Id {

@@ -1026,10 +1026,10 @@ fn compile_mir_rule_inner(
                }
             }
          },
-         MirBodyItem::Generator(gen) => {
-            let pat = &gen.pattern;
-            let expr = &gen.expr;
-            quote_spanned! {gen.for_keyword.span()=>
+         MirBodyItem::Generator(r#gen) => {
+            let pat = &r#gen.pattern;
+            let expr = &r#gen.expr;
+            quote_spanned! {r#gen.for_keyword.span()=>
                for #pat in #expr {
                   #next_loop
                }

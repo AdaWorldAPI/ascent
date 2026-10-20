@@ -228,7 +228,7 @@ impl<T: Clone + Hash + Eq> EqRelIndCommon<T> {
       self.combined.iter_all().filter(|(x, y)| !self.old.contains(x, y))
    }
 
-   pub(crate) fn set_of_added(&self, x: &T) -> Option<impl Iterator<Item = &T>> {
+   pub(crate) fn set_of_added<'s>(&'s self, x: &T) -> Option<impl Iterator<Item = &'s T> + use<'s, T>> {
       let set = self.combined.set_of(x)?;
       // let old_set = self.old.set_of(x).into_iter().flatten();
       let old_set = self.old.elem_set(x).map(|id| &self.old.sets[id]);

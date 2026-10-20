@@ -13,7 +13,7 @@ pub fn rels_equal<T: Eq + std::hash::Hash>(
 
 #[macro_export]
 macro_rules! assert_rels_eq {
-   ($rel1: expr, $rel2: expr) => {
+   ($rel1: expr_2021, $rel2: expr_2021) => {
       let (rel1, rel2) = ($rel1.into_iter().collect::<std::collections::HashSet<_>>(), $rel2.into_iter().collect::<std::collections::HashSet<_>>());
       if rel1 != rel2 {
          panic!("Expected rels to be equal. \nrel1: {:?} \nrel2: {:?}",

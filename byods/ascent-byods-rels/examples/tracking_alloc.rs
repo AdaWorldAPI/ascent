@@ -12,27 +12,27 @@ pub static mut CURRENT_ALLOC: usize = 0;
 unsafe impl<T: GlobalAlloc> GlobalAlloc for TrackingAllocator<T> {
    
    #[inline]
-   unsafe fn alloc(&self, layout: std::alloc::Layout) -> *mut u8 {
+   unsafe fn alloc(&self, layout: std::alloc::Layout) -> *mut u8 { unsafe {
       CURRENT_ALLOC += layout.size();
       MAX_ALLOC = MAX_ALLOC.max(CURRENT_ALLOC);
       self.0.alloc(layout)
-   }
+   }}
 
    #[inline]
-   unsafe fn dealloc(&self, ptr: *mut u8, layout: std::alloc::Layout) {
+   unsafe fn dealloc(&self, ptr: *mut u8, layout: std::alloc::Layout) { unsafe {
       CURRENT_ALLOC = CURRENT_ALLOC.saturating_sub(layout.size());
       self.0.dealloc(ptr, layout)
-   }
+   }}
 
    #[inline]
-   unsafe fn alloc_zeroed(&self, layout: std::alloc::Layout) -> *mut u8 {
+   unsafe fn alloc_zeroed(&self, layout: std::alloc::Layout) -> *mut u8 { unsafe {
       CURRENT_ALLOC += layout.size();
       MAX_ALLOC = MAX_ALLOC.max(CURRENT_ALLOC);
       self.0.alloc_zeroed(layout)
-   }
+   }}
 
    #[inline]
-   unsafe fn realloc(&self, ptr: *mut u8, layout: std::alloc::Layout, new_size: usize) -> *mut u8 {
+   unsafe fn realloc(&self, ptr: *mut u8, layout: std::alloc::Layout, new_size: usize) -> *mut u8 { unsafe {
       if new_size > layout.size() {
          CURRENT_ALLOC += new_size - layout.size();
          MAX_ALLOC = MAX_ALLOC.max(CURRENT_ALLOC);
@@ -40,7 +40,7 @@ unsafe impl<T: GlobalAlloc> GlobalAlloc for TrackingAllocator<T> {
          CURRENT_ALLOC = CURRENT_ALLOC.saturating_sub(layout.size() - new_size);
       }
       self.0.realloc(ptr, layout, new_size)
-   }
+   }}
 }
 
 pub fn current_alloc() -> usize {

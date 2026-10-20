@@ -496,8 +496,8 @@ impl Parse for RuleNode {
 pub(crate) fn rule_node_summary(rule: &RuleNode) -> String {
    fn bitem_to_str(bitem: &BodyItemNode) -> String {
       match bitem {
-         BodyItemNode::Generator(gen) =>
-            format!("for_{}", pat_to_ident(&gen.pattern).map(|x| x.to_string()).unwrap_or_default()),
+         BodyItemNode::Generator(r#gen) =>
+            format!("for_{}", pat_to_ident(&r#gen.pattern).map(|x| x.to_string()).unwrap_or_default()),
          BodyItemNode::Clause(bcl) => format!("{}", bcl.rel),
          BodyItemNode::Disjunction(_) => todo!(),
          BodyItemNode::Cond(_cl) => format!("if_"),
@@ -739,7 +739,7 @@ fn rule_desugar_disjunction_nodes(rule: RuleNode) -> Vec<RuleNode> {
 
 fn body_item_get_bound_vars(bi: &BodyItemNode) -> Vec<Ident> {
    match bi {
-      BodyItemNode::Generator(gen) => pattern_get_vars(&gen.pattern),
+      BodyItemNode::Generator(r#gen) => pattern_get_vars(&r#gen.pattern),
       BodyItemNode::Agg(agg) => pattern_get_vars(&agg.pat),
       BodyItemNode::Clause(cl) => cl.args.iter().flat_map(|arg| arg.get_vars()).collect(),
       BodyItemNode::Negation(_cl) => vec![],
@@ -752,7 +752,7 @@ fn body_item_get_bound_vars(bi: &BodyItemNode) -> Vec<Ident> {
 
 fn body_item_visit_bound_vars_mut(bi: &mut BodyItemNode, visitor: &mut dyn FnMut(&mut Ident)) {
    match bi {
-      BodyItemNode::Generator(gen) => pattern_visit_vars_mut(&mut gen.pattern, visitor),
+      BodyItemNode::Generator(r#gen) => pattern_visit_vars_mut(&mut r#gen.pattern, visitor),
       BodyItemNode::Agg(agg) => pattern_visit_vars_mut(&mut agg.pat, visitor),
       BodyItemNode::Clause(cl) =>
          for arg in cl.args.iter_mut() {
@@ -790,7 +790,7 @@ fn body_item_visit_exprs_free_vars_mut(
       }
    };
    match bi {
-      BodyItemNode::Generator(gen) => visit(&mut gen.expr),
+      BodyItemNode::Generator(r#gen) => visit(&mut r#gen.expr),
       BodyItemNode::Agg(agg) => {
          for arg in agg.rel_args.iter_mut() {
             visit(arg)
@@ -943,12 +943,12 @@ fn rule_desugar_repeated_vars(mut rule: RuleNode) -> RuleNode {
                cl.cond_clauses.insert(0, new_cond_cl);
             }
          },
-         BodyItemNode::Generator(gen) =>
-            for ident in pattern_get_vars(&gen.pattern) {
+         BodyItemNode::Generator(r#gen) =>
+            for ident in pattern_get_vars(&r#gen.pattern) {
                grounded_vars.entry(ident).or_insert(i);
             },
-         BodyItemNode::Cond(ref cond_cl @ CondClause::IfLet(_))
-         | BodyItemNode::Cond(ref cond_cl @ CondClause::Let(_)) =>
+         &mut BodyItemNode::Cond(ref cond_cl @ CondClause::IfLet(_))
+         | &mut BodyItemNode::Cond(ref cond_cl @ CondClause::Let(_)) =>
             for ident in cond_cl.bound_vars() {
                grounded_vars.entry(ident).or_insert(i);
             },

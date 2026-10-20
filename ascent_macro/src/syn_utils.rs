@@ -81,7 +81,7 @@ pub fn pattern_get_vars(pat: &Pat) -> Vec<Ident> {
 
 pub fn pattern_visit_vars_mut(pat: &mut Pat, visitor: &mut dyn FnMut(&mut Ident)) {
    macro_rules! visit {
-      ($e: expr) => {
+      ($e: expr_2021) => {
          pattern_visit_vars_mut($e, visitor)
       };
    }
@@ -251,15 +251,15 @@ pub fn block_visit_free_vars(block: &Block, visitor: &mut dyn FnMut(&Ident)) {
 /// visits free variables in the expr
 pub fn expr_visit_free_vars_mbm(expr: reft([Expr]), visitor: &mut dyn FnMut(reft([Ident]))) {
    macro_rules! visit {
-      ($e: expr) => { expr_visit_free_vars_mbm(reft([$e]), visitor)};
+      ($e: expr_2021) => { expr_visit_free_vars_mbm(reft([$e]), visitor)};
    }
    macro_rules! visitor_except {
-      ($excluded: expr) => {
+      ($excluded: expr_2021) => {
          &mut |ident| {if ! $excluded.contains(ident) {visitor(ident)}}
       };
    }
    macro_rules! visit_except {
-      ($e: expr, $excluded: expr) => { expr_visit_free_vars_mbm($e, visitor_except!($excluded))};
+      ($e: expr_2021, $excluded: expr_2021) => { expr_visit_free_vars_mbm($e, visitor_except!($excluded))};
    }
    match expr {
       Expr::Array(arr) =>
