@@ -392,7 +392,7 @@ impl<T: Clone + Hash + Eq> CEqRelIndCommon<T> {
       AllAddedParIter(eqrel)
    }
 
-   pub(crate) fn set_of_added(&self, x: &T) -> Option<impl Iterator<Item = &T>> {
+   pub(crate) fn set_of_added<'s>(&'s self, x: &T) -> Option<impl Iterator<Item = &'s T> + use<'s, T>> {
       let self_ = self.unwrap_frozen();
       let set = self_.combined.set_of(x)?;
       // let old_set = self.old.set_of(x).into_iter().flatten();

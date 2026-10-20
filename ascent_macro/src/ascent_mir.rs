@@ -64,8 +64,8 @@ pub(crate) fn mir_rule_summary(rule: &MirRule) -> String {
    fn bitem_to_str(bitem: &MirBodyItem) -> String {
       match bitem {
          MirBodyItem::Clause(bcl) => format!("{}_{}", bcl.rel.ir_name, bcl.rel.version.to_string()),
-         MirBodyItem::Generator(gen) =>
-            format!("for_{}", pat_to_ident(&gen.pattern).map(|x| x.to_string()).unwrap_or_default()),
+         MirBodyItem::Generator(r#gen) =>
+            format!("for_{}", pat_to_ident(&r#gen.pattern).map(|x| x.to_string()).unwrap_or_default()),
          MirBodyItem::Cond(CondClause::If(..)) => format!("if ⋯"),
          MirBodyItem::Cond(CondClause::IfLet(..)) => format!("if let ⋯"),
          MirBodyItem::Cond(CondClause::Let(..)) => format!("let ⋯"),
@@ -111,7 +111,7 @@ impl MirBodyItem {
             let cond_cl_vars = cl.cond_clauses.iter().flat_map(|cc| cc.bound_vars());
             cl_vars.chain(cond_cl_vars).collect()
          },
-         MirBodyItem::Generator(gen) => pattern_get_vars(&gen.pattern),
+         MirBodyItem::Generator(r#gen) => pattern_get_vars(&r#gen.pattern),
          MirBodyItem::Cond(cond) => cond.bound_vars(),
          MirBodyItem::Agg(agg) => pattern_get_vars(&agg.pat),
       }
@@ -382,7 +382,7 @@ fn compile_hir_rule_to_mir_rules(rule: &IrRule, dynamic_relations: &HashSet<Rela
             MirBodyItem::Clause(mir_bcl)
          },
          IrBodyItem::Cond(cl) => MirBodyItem::Cond(cl.clone()),
-         IrBodyItem::Generator(gen) => MirBodyItem::Generator(gen.clone()),
+         IrBodyItem::Generator(r#gen) => MirBodyItem::Generator(r#gen.clone()),
          IrBodyItem::Agg(agg) => MirBodyItem::Agg(agg.clone()),
       }
    }

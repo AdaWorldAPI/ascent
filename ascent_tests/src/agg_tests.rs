@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::utils::rels_equal;
 use crate::{ascent_run_m_par, assert_rels_eq};
 
-fn percentile<'a, TInputIter>(p: f32) -> impl Fn(TInputIter) -> std::option::IntoIter<i32>
+fn percentile<'a, TInputIter>(p: f32) -> impl Fn(TInputIter) -> std::option::IntoIter<i32> + use<TInputIter>
 where TInputIter: Iterator<Item = (&'a i32,)> {
    move |inp| {
       let sorted = inp.map(|tuple| *tuple.0).sorted().collect_vec();

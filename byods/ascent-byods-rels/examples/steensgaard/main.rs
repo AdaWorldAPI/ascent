@@ -81,7 +81,7 @@ ascent! {
    vpt(x,q);
 }
 
-fn read_csv<T>(path: &str) -> impl Iterator<Item = T>
+fn read_csv<T>(path: &str) -> impl Iterator<Item = T> + use<T>
 where
    for<'de> T: serde::de::Deserialize<'de>,
 {

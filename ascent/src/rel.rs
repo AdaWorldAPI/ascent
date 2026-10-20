@@ -1,11 +1,11 @@
 //! The default data structure provider for Ascent relations
 
 macro_rules! _rel_type_template {
-   ($field_types: ty, $indices: expr, $par: ident) => {};
+   ($field_types: ty, $indices: expr_2021, $par: ident) => {};
 }
 
 macro_rules! _rel_ind_template {
-   ($field_types: ty, $indices: expr, $par: ident, $ind: expr) => {};
+   ($field_types: ty, $indices: expr_2021, $par: ident, $ind: expr_2021) => {};
 }
 
 #[doc(hidden)]
@@ -18,10 +18,10 @@ pub use rel_codegen;
 #[doc(hidden)]
 #[macro_export]
 macro_rules! rel {
-   ($name: ident, $field_types: ty, $indices: expr, ser, ()) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, ser, ()) => {
       ::std::vec::Vec<$field_types>
    };
-   ($name: ident, $field_types: ty, $indices: expr, par, ()) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, par, ()) => {
       ::ascent::boxcar::Vec<$field_types>
    };
 }
@@ -30,10 +30,10 @@ pub use rel;
 #[doc(hidden)]
 #[macro_export]
 macro_rules! rel_ind_common {
-   ($name: ident, $field_types: ty, $indices: expr, ser, ()) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, ser, ()) => {
       ()
    };
-   ($name: ident, $field_types: ty, $indices: expr, par, ()) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, par, ()) => {
       ()
    };
 }
@@ -42,10 +42,10 @@ pub use rel_ind_common;
 #[doc(hidden)]
 #[macro_export]
 macro_rules! rel_full_ind {
-   ($name: ident, $field_types: ty, $indices: expr, ser, (), $key: ty, $val: ty) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, ser, (), $key: ty, $val: ty) => {
       ascent::internal::RelFullIndexType<$key, $val>
    };
-   ($name: ident, $field_types: ty, $indices: expr, par, (), $key: ty, $val: ty) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, par, (), $key: ty, $val: ty) => {
       ascent::internal::CRelFullIndex<$key, $val>
    };
 }
@@ -54,13 +54,13 @@ pub use rel_full_ind;
 #[doc(hidden)]
 #[macro_export]
 macro_rules! rel_ind {
-   ($name: ident, $field_types: ty, $indices: expr, ser, (), $ind: expr, $key: ty, $val: ty) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, ser, (), $ind: expr_2021, $key: ty, $val: ty) => {
       ascent::rel::ToRelIndexType<$key, $val>
    };
-   ($name: ident, $field_types: ty, $indices: expr, par, (), [], $key: ty, $val: ty) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, par, (), [], $key: ty, $val: ty) => {
       ascent::internal::CRelNoIndex<$val>
    };
-   ($name: ident, $field_types: ty, $indices: expr, par, (), $ind: expr, $key: ty, $val: ty) => {
+   ($name: ident, $field_types: ty, $indices: expr_2021, par, (), $ind: expr_2021, $key: ty, $val: ty) => {
       ascent::internal::CRelIndex<$key, $val>
    };
 }

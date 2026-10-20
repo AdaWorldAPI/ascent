@@ -265,12 +265,12 @@ impl<T: Clone + Hash + Eq> TrRelUnionFind<T> {
       true
    }
 
-   pub fn set_of<'a>(&'a self, x: &T) -> Option<impl Iterator<Item = &'a T>> {
+   pub fn set_of<'a>(&'a self, x: &T) -> Option<impl Iterator<Item = &'a T> + use<'a, T>> {
       let set_id = self.elem_set(x)?;
       Some(self.set_of_by_set_id(x, set_id))
    }
 
-   pub(crate) fn set_of_by_set_id<'a>(&'a self, _x: &T, id: usize) -> impl Iterator<Item = &'a T> {
+   pub(crate) fn set_of_by_set_id<'a>(&'a self, _x: &T, id: usize) -> impl Iterator<Item = &'a T> + use<'a, T> {
       let id = self.get_dominant_id(id);
       let res = self
          .set_connections
@@ -289,7 +289,7 @@ impl<T: Clone + Hash + Eq> TrRelUnionFind<T> {
       Some(self.rev_set_of_by_set_id(x, set_id))
    }
 
-   pub(crate) fn rev_set_of_by_set_id<'a>(&'a self, _x: &T, id: usize) -> impl Iterator<Item = &'a T> {
+   pub(crate) fn rev_set_of_by_set_id<'a>(&'a self, _x: &T, id: usize) -> impl Iterator<Item = &'a T> + use<'a, T> {
       let id = self.get_dominant_id(id);
       let res = self
          .reverse_set_connections

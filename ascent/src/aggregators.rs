@@ -73,7 +73,7 @@ where N: 'a + Clone + Into<f64> {
 }
 
 /// computes the value at the given percentile of the input column
-pub fn percentile<'a, TItem, TInputIter>(p: f64) -> impl Fn(TInputIter) -> std::option::IntoIter<TItem>
+pub fn percentile<'a, TItem, TInputIter>(p: f64) -> impl Fn(TInputIter) -> std::option::IntoIter<TItem> + use<TItem, TInputIter>
 where
    TInputIter: Iterator<Item = (&'a TItem,)>,
    TItem: 'a + Ord + Clone,

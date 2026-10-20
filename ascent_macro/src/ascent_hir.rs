@@ -344,7 +344,7 @@ fn compile_rule_to_ir_rule(rule: &RuleNode, prog: &AscentProgram) -> syn::Result
       && matches!(rule.body_items.get(first_clause_ind.unwrap() + 1), Some(BodyItemNode::Clause(..)));
    for (bitem_ind, bitem) in rule.body_items.iter().enumerate() {
       match bitem {
-         BodyItemNode::Clause(ref bcl) => {
+         BodyItemNode::Clause(bcl) => {
             if first_clause_ind == Some(bitem_ind)
                && bcl.cond_clauses.iter().any(|c| matches!(c, &CondClause::IfLet(_)))
             {
@@ -402,15 +402,15 @@ fn compile_rule_to_ir_rule(rule: &RuleNode, prog: &AscentProgram) -> syn::Result
             };
             body_items.push(IrBodyItem::Clause(ir_bcl));
          },
-         BodyItemNode::Generator(ref gen) => {
-            extend_grounded_vars(&mut grounded_vars, pattern_get_vars(&gen.pattern))?;
-            body_items.push(IrBodyItem::Generator(gen.clone()));
+         BodyItemNode::Generator(r#gen) => {
+            extend_grounded_vars(&mut grounded_vars, pattern_get_vars(&r#gen.pattern))?;
+            body_items.push(IrBodyItem::Generator(r#gen.clone()));
          },
-         BodyItemNode::Cond(ref cl) => {
+         BodyItemNode::Cond(cl) => {
             body_items.push(IrBodyItem::Cond(cl.clone()));
             extend_grounded_vars(&mut grounded_vars, cl.bound_vars())?;
          },
-         BodyItemNode::Agg(ref agg) => {
+         BodyItemNode::Agg(agg) => {
             extend_grounded_vars(&mut grounded_vars, pattern_get_vars(&agg.pat))?;
             let indices = agg
                .rel_args
